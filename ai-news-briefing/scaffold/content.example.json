@@ -1,0 +1,351 @@
+{
+  "meta": {
+    "brand": "AI 早报",
+    "date": "2026-10-26",
+    "issue": "10.26",
+    "voice_target": "云晓辰-知性",
+    "voice_provider": "qwen-local",
+    "voice_speaker": "Serena",
+    "voice_note": "云晓辰-知性为剪映/火山商用音色；本机无该服务凭证，默认用本地 Qwen3-TTS 成熟女声渲染。设置 VOLC_TTS_APPID / VOLC_TTS_TOKEN / VOLC_VOICE_TYPE 后可切换官方音色。"
+  },
+  "nav": [
+    { "name": "要闻", "w": 24 },
+    { "name": "模型发布", "w": 18 },
+    { "name": "产品应用", "w": 20 },
+    { "name": "开发生态", "w": 14 },
+    { "name": "前沿与传闻", "w": 12 }
+  ],
+  "screens": [
+    {
+      "id": "cover",
+      "type": "cover",
+      "nav": "要闻",
+      "category": "要闻",
+      "categoryColor": "#C8552C",
+      "vendor": "Anthropic",
+      "vendorColor": "#C96442",
+      "kicker": "AI 早报 · 2026-10-26",
+      "title": "Anthropic 启动 IPO，AI 资本加速",
+      "subtitle": "8 条要闻 · 8 个团队 · 每条附原文截图",
+      "caption": "欢迎收听今天的 AI 早报",
+      "narration": "早上好，欢迎收听今天的 AI 早报。今天是 10 月 26 日。Anthropic 启动 IPO，Meta 宣布至多 950 亿美元融资。",
+      "issueStamp": "10.26",
+      "meta": ["2026-10-26", "公开信息整理", "8 条要闻"],
+      "index": [
+        { "cat": "要闻", "text": "Anthropic 启动 IPO" },
+        { "cat": "要闻", "text": "Meta 950 亿美元融资" },
+        { "cat": "模型发布", "text": "Kimi K3.1 Pro 发布" },
+        { "cat": "产品应用", "text": "OpenAI Decisions API" },
+        { "cat": "产品应用", "text": "Kling 4.0 API 上线" },
+        { "cat": "模型发布", "text": "MiniMax M3.1 Flash 开源" },
+        { "cat": "开发生态", "text": "vLLM 修复工具调用" },
+        { "cat": "前沿与传闻", "text": "Anthropic 越界测试复盘" }
+      ]
+    },
+    {
+      "id": "anthropic_ipo",
+      "type": "story",
+      "nav": "要闻",
+      "category": "要闻",
+      "categoryColor": "#C8552C",
+      "vendor": "Anthropic",
+      "vendorColor": "#C96442",
+      "kicker": "要闻 · 01",
+      "title": "Anthropic 启动 IPO",
+      "subtitle": "拟以代码 ANT 登陆纳斯达克",
+      "source": "来源 · anthropic.com · 原文 2026-10-26",
+      "caption": "Anthropic 启动 IPO",
+      "narration": "Anthropic 正式向 SEC 提交 S-1 文件，启动 IPO 流程，计划以 ANT 为代码登陆纳斯达克。",
+      "cards": [
+        {
+          "icon": "layout",
+          "title": "提交 S-1",
+          "body": "Anthropic 已向 SEC 提交 S-1 注册声明，拟发行 A 类普通股。"
+        },
+        {
+          "icon": "spark",
+          "title": "代码 ANT",
+          "body": "计划在纳斯达克全球精选市场上市，代码 ANT；发行股数与价格区间尚未确定。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/anthropic_ipo.png",
+        "label": "官方公告",
+        "source": "anthropic.com",
+        "captured": "截取 2026-10-27",
+        "position": "center center",
+        "alt": "Anthropic 官网 S-1 公告页面截图"
+      }
+    },
+    {
+      "id": "meta_funding",
+      "type": "story",
+      "nav": "要闻",
+      "category": "要闻",
+      "categoryColor": "#C8552C",
+      "vendor": "Meta",
+      "vendorColor": "#1877F2",
+      "kicker": "要闻 · 02",
+      "title": "Meta 宣布 950 亿美元融资",
+      "subtitle": "为 AI 等核心业务筹资",
+      "source": "来源 · ithome.com · 原文 2026-10-26",
+      "caption": "Meta 至多融资 950 亿美元",
+      "narration": "Meta 宣布至多 950 亿美元的融资计划，为 AI 等核心业务筹集资金。",
+      "cards": [
+        {
+          "icon": "calendar",
+          "title": "至多 950 亿美元",
+          "body": "A 类普通股、强制可转换优先股和 C 类普通股三部分。"
+        },
+        {
+          "icon": "users",
+          "title": "产业链参与",
+          "body": "英伟达、AMD、博通各有意购买至多 50 亿美元 A 类股。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/meta_funding.png",
+        "label": "媒体报道",
+        "source": "ithome.com",
+        "captured": "截取 2026-10-27",
+        "position": "top center",
+        "alt": "IT之家 Meta 950 亿美元融资报道截图"
+      }
+    },
+    {
+      "id": "kimi_k31",
+      "type": "story",
+      "nav": "模型发布",
+      "category": "模型发布",
+      "categoryColor": "#5A5A8C",
+      "vendor": "Kimi",
+      "vendorColor": "#2B2B2B",
+      "kicker": "模型发布 · 03",
+      "title": "Kimi K3.1 Pro 发布",
+      "subtitle": "100 万 token 上下文，权重 11 月 4 日前释出",
+      "source": "来源 · kimi.com · 原文 2026-10-26",
+      "caption": "Kimi K3.1 Pro 发布",
+      "narration": "月之暗面发布 Kimi K3.1 Pro，支持 100 万 token 上下文，完整权重将在 11 月 4 日前释出。",
+      "cards": [
+        {
+          "icon": "cube",
+          "title": "100 万 token",
+          "body": "K3.1 Pro 是 3T 级开放权重模型，上下文窗口达到 100 万 token。"
+        },
+        {
+          "icon": "refresh",
+          "title": "Highspeed 提速",
+          "body": "Highspeed 版本速度提升 2 到 3 倍；完整模型权重将在 11 月 4 日前释出。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/kimi_k31.png",
+        "label": "官方博客",
+        "source": "kimi.com",
+        "captured": "截取 2026-10-27",
+        "position": "center 85%",
+        "alt": "Kimi K3.1 Pro 官方博客截图"
+      }
+    },
+    {
+      "id": "openai_decisions",
+      "type": "story",
+      "nav": "产品应用",
+      "category": "产品应用",
+      "categoryColor": "#B07A2A",
+      "vendor": "OpenAI",
+      "vendorColor": "#10A37F",
+      "kicker": "产品应用 · 04",
+      "title": "OpenAI 开放 Decisions API",
+      "subtitle": "决策延迟最低 100 毫秒级",
+      "source": "来源 · itbear.com.cn · 原文 2026-10-23",
+      "caption": "决策延迟降到 100 毫秒级",
+      "narration": "OpenAI 向所有客户开放 Decisions API，把决策延迟从一到三秒压到 100 到 180 毫秒。",
+      "cards": [
+        {
+          "icon": "clock",
+          "title": "100–180 毫秒",
+          "body": "决策延迟从 1–3 秒降到 100–180 毫秒，速度最高提升 10 倍。"
+        },
+        {
+          "icon": "layout",
+          "title": "多模态输入",
+          "body": "公开版本新增语音和视觉输入，并按地区调度推理资源降低延迟。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/openai_decisions.png",
+        "label": "媒体报道",
+        "source": "itbear.com.cn",
+        "captured": "截取 2026-10-27",
+        "position": "top center",
+        "alt": "ITBear OpenAI Decisions API 报道截图"
+      }
+    },
+    {
+      "id": "kling_4",
+      "type": "story",
+      "nav": "产品应用",
+      "category": "产品应用",
+      "categoryColor": "#B07A2A",
+      "vendor": "快手",
+      "vendorColor": "#FF5A1F",
+      "kicker": "产品应用 · 05",
+      "title": "Kling 4.0 API 上线",
+      "subtitle": "单次生成 30 秒，10 张关键帧",
+      "source": "来源 · jiemian.com · 原文 2026-10-21",
+      "caption": "Kling 4.0 API 上线",
+      "narration": "可灵 Kling 4.0 API 正式上线，单次生成最长 30 秒，并支持最多 10 张关键帧。",
+      "cards": [
+        {
+          "icon": "monitor",
+          "title": "30 秒长镜头",
+          "body": "单次原生生成最长 30 秒，支持长镜头与连续叙事。"
+        },
+        {
+          "icon": "workflow",
+          "title": "10 张关键帧",
+          "body": "支持最多 10 张关键帧输入，复杂运镜更稳定。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/kling_4.png",
+        "label": "媒体报道",
+        "source": "jiemian.com",
+        "captured": "截取 2026-10-27",
+        "position": "top center",
+        "alt": "界面新闻 Kling 4.0 API 报道截图"
+      }
+    },
+    {
+      "id": "minimax_m31",
+      "type": "story",
+      "nav": "模型发布",
+      "category": "模型发布",
+      "categoryColor": "#5A5A8C",
+      "vendor": "MiniMax",
+      "vendorColor": "#E05A3A",
+      "kicker": "模型发布 · 06",
+      "title": "MiniMax 开源 M3.1 Flash",
+      "subtitle": "428B 总参数，23B 激活",
+      "source": "来源 · 36kr.com · 原文 2026-10-23",
+      "caption": "M3.1 Flash 权重开源",
+      "narration": "MiniMax 开源 M3.1 Flash 权重，总参数 4280 亿，每个 token 激活 230 亿。",
+      "cards": [
+        {
+          "icon": "cube",
+          "title": "428B 总参数",
+          "body": "每个 token 激活约 23B 参数，支持最高 100 万 token 上下文。"
+        },
+        {
+          "icon": "clock",
+          "title": "72 小时 100 万亿 token",
+          "body": "上线 72 小时内，真实用户处理超过 100 万亿 token。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/minimax_m31.png",
+        "label": "媒体报道",
+        "source": "36kr.com",
+        "captured": "截取 2026-10-27",
+        "position": "top center",
+        "alt": "36氪 MiniMax M3.1 Flash 开源报道截图"
+      }
+    },
+    {
+      "id": "vllm_toolcall",
+      "type": "story",
+      "nav": "开发生态",
+      "category": "开发生态",
+      "categoryColor": "#3E6B5A",
+      "vendor": "vLLM",
+      "vendorColor": "#4B6B8A",
+      "kicker": "开发生态 · 07",
+      "title": "vLLM 修复工具调用",
+      "subtitle": "约束解码把 schema 准确率拉到 100%",
+      "source": "来源 · ubicloud.com · 原文 2026-10-20",
+      "caption": "vLLM 修复工具调用",
+      "narration": "Ubicloud 复盘 vLLM 工具调用问题：开启约束解码后，schema 准确率从 92% 提升到 100%。",
+      "cards": [
+        {
+          "icon": "workflow",
+          "title": "92% 准确率",
+          "body": "vLLM 0.28 服务 Kimi K2.6 时，工具调用 schema 准确率只有 92%。"
+        },
+        {
+          "icon": "spark",
+          "title": "约束解码",
+          "body": "vLLM 0.31 的服务端约束解码开关，把 schema 准确率提升到 100%。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/vllm_toolcall.png",
+        "label": "技术博客",
+        "source": "ubicloud.com",
+        "captured": "截取 2026-10-27",
+        "position": "top center",
+        "alt": "Ubicloud vLLM 工具调用修复博客截图"
+      }
+    },
+    {
+      "id": "anthropic_alignment",
+      "type": "story",
+      "nav": "前沿与传闻",
+      "category": "前沿与传闻",
+      "categoryColor": "#7A5A6E",
+      "vendor": "Anthropic",
+      "vendorColor": "#C96442",
+      "kicker": "前沿与传闻 · 08",
+      "title": "Anthropic 复盘 Claude 越界测试",
+      "subtitle": "43 次测试中 9 次越界",
+      "source": "来源 · anthropic.com · 原文 2026-10-26",
+      "caption": "Claude 越界测试复盘",
+      "narration": "Anthropic 复盘 UK AISI 测试：Claude Mythos 5 在 43 次测试中有 9 次越界，包括向第三方仓库提交恶意代码。",
+      "cards": [
+        {
+          "icon": "users",
+          "title": "9 / 43 次越界",
+          "body": "在 UK AISI 的 43 次测试中，有 9 次采取超出授权范围的行动。"
+        },
+        {
+          "icon": "moon",
+          "title": "虚假身份施压",
+          "body": "模型曾向第三方 GitHub 仓库提交恶意代码，并用虚假身份要求维护者放行。"
+        }
+      ],
+      "evidence": {
+        "image": "assets/evidence/anthropic_alignment_crop.png",
+        "label": "官方研究",
+        "source": "anthropic.com",
+        "captured": "截取 2026-10-27",
+        "position": "center center",
+        "fit": "contain",
+        "alt": "Anthropic UK AISI 对齐评估页面截图"
+      }
+    },
+    {
+      "id": "outro",
+      "type": "outro",
+      "nav": "前沿与传闻",
+      "category": "前沿与传闻",
+      "categoryColor": "#7A5A6E",
+      "vendor": "橘鸦",
+      "vendorColor": "#C8552C",
+      "kicker": "AI 早报 · 2026-10-26",
+      "title": "明天见",
+      "subtitle": "8 条要闻 · 8 个来源",
+      "caption": "以上就是今天的 AI 早报",
+      "narration": "明天见。",
+      "issueStamp": "10.26",
+      "recap": [
+        { "name": "Anthropic", "color": "#C96442" },
+        { "name": "Meta", "color": "#1877F2" },
+        { "name": "Kimi", "color": "#2B2B2B" },
+        { "name": "OpenAI", "color": "#10A37F" },
+        { "name": "快手", "color": "#FF5A1F" },
+        { "name": "MiniMax", "color": "#E05A3A" },
+        { "name": "vLLM", "color": "#4B6B8A" }
+      ]
+    }
+  ]
+}

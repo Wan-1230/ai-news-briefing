@@ -1,0 +1,68 @@
+{
+  "items": [
+    {
+      "id": "anthropic_ipo",
+      "url": "https://www.anthropic.com/news/s1-sec",
+      "label": "官方公告",
+      "source": "anthropic.com",
+      "position": "center center",
+      "fit": "cover"
+    },
+    {
+      "id": "meta_funding",
+      "url": "https://www.ithome.com/1/018/144.htm",
+      "label": "媒体报道",
+      "source": "ithome.com",
+      "position": "top center",
+      "fit": "cover"
+    },
+    {
+      "id": "kimi_k31",
+      "url": "https://www.kimi.com/en/blog/kimi-k3-1-pro",
+      "label": "官方博客",
+      "source": "kimi.com",
+      "position": "center 85%",
+      "fit": "cover"
+    },
+    {
+      "id": "openai_decisions",
+      "url": "https://m.itbear.com.cn/html/2026-10/1577331.html",
+      "label": "媒体报道",
+      "source": "itbear.com.cn",
+      "position": "top center",
+      "fit": "cover"
+    },
+    {
+      "id": "kling_4",
+      "url": "https://www.jiemian.com/article/15220180.html",
+      "label": "媒体报道",
+      "source": "jiemian.com",
+      "position": "top center",
+      "fit": "cover"
+    },
+    {
+      "id": "minimax_m31",
+      "url": "http://36kr.com/p/4038403667760257",
+      "label": "媒体报道",
+      "source": "36kr.com",
+      "position": "top center",
+      "fit": "cover"
+    },
+    {
+      "id": "vllm_toolcall",
+      "url": "https://www.ubicloud.com/blog/fixing-tool-call-accuracy-in-vllm",
+      "label": "技术博客",
+      "source": "ubicloud.com",
+      "position": "top center",
+      "fit": "cover"
+    },
+    {
+      "id": "anthropic_alignment",
+      "url": "https://www.anthropic.com/research/alignment-assessment-ukaisi",
+      "label": "官方研究",
+      "source": "anthropic.com",
+      "position": "center center",
+      "fit": "contain"
+    }
+  ]
+}

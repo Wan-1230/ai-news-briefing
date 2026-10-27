@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.hyperframes/
+dist/
+out/
+renders/
+assets/audio/
+assets/evidence/*.png
+node_modules/
