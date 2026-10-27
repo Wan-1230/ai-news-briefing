@@ -30,6 +30,16 @@
 | 想用云晓辰-知性 | 只有火山 TTS 路径：`VOLC_TTS_APPID` / `VOLC_TTS_TOKEN` / `VOLC_TTS_VOICE_TYPE`；voice_type 必须从控制台取，不能猜 |
 | 改文案后配音没变 | `build.py` 默认复用已有 `raw_*.wav`；加 `--force-tts` 或删掉对应 raw 文件 |
 
+## 封面
+
+| 现象 | 处理 |
+|---|---|
+| 构建日志出现 `[covers] skipped` | Playwright 或 Chromium 不可用；设置 `AI_BRIEFING_CHROMIUM`，或单独跑 `python scripts/make_covers.py` |
+| 封面中文变方框 | `assets/fonts/` 缺 Noto Sans SC / Noto Serif SC；用 `new_project.py --fonts-dir` 复制 |
+| 标题溢出/压住索引 | 缩短 `cover.title`，或调 `make_covers.py` 的 `.title` 字号和 `max-width` |
+| B 站上传封面失败 | 用 16:9 的 JPG（1920×1080），不要用 4:3；单张 < 5MB，格式 JPG/PNG |
+| 4:3 版面太空 | 已默认列出全部 8 条索引；条目少时可调 `.portrait .layout` 的 `gap` 或增大字号 |
+
 ## 构建与渲染
 
 | 现象 | 处理 |

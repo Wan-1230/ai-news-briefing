@@ -18,6 +18,7 @@ ai_brief/
 ├── scripts/
 │   ├── collect_daily.py    # 多源采集与候选排序
 │   ├── capture_evidence.py # 原文截图与正文导出
+│   ├── make_covers.py      # 16:9 / 4:3 横版封面
 │   └── tts_provider.py     # Qwen3-TTS / 火山
 ├── assets/
 │   ├── fonts/              # NotoSansSC-VF.ttf / NotoSerifSC-VF.ttf
@@ -97,9 +98,21 @@ python build.py --reuse-tts --reuse-master --speed 1.68   # 改文案/改布局�
 
 - GPU 可用时 `tts_provider.synthesize_qwen` 自动 `device_map="cuda"`；CPU 生成很慢，不建议。
 - 输出：`index.html`、`assets/audio/mix.wav`、`assets/audio/timeline.json`。
+- 构建结束自动调用 `scripts/make_covers.py`，生成 `out/covers/cover_16x9.png|jpg` 与 `cover_4x3.png|jpg`；`--no-covers` 可跳过。
 - 时长、切换点、点击点由每条 `vo_*.wav` 实际时长计算；不设 30 秒上限。
 
-## 6. 渲染与验收
+## 6. 封面
+
+封面不是截视频帧，而是读 `content.json` 的封面标题、副标题、索引、日期和厂家重新排版：
+
+- 16:9：1920×1080，用于 B 站等横版平台；JPG < 5MB，满足 B 站 ≥1146×717 的要求。
+- 4:3：1440×1080，用于公众号、小红书、站内推荐等位置。
+- 两张都输出 PNG（无损）和 JPG（上传用）。
+- 文案来源：`cover.title / subtitle / caption / index / meta`；索引 16:9 显示前 4 条，4:3 显示全部（最多 8 条）。
+- 字体缺失会显示方框；确保 `assets/fonts/NotoSansSC-VF.ttf` 和 `NotoSerifSC-VF.ttf` 存在。
+- 标题太长时改 `make_covers.py` 里的 `.title` 字号/`max-width`，或缩短 `cover.title`。
+
+## 7. 渲染与验收
 
 ```bash
 export PATH="<ffmpeg-dir>:$PATH"
@@ -116,3 +129,4 @@ python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 - ffprobe：3840×2160、30fps、H.264 + AAC 48k。
 - 点击音：`verify_render.py` 输出每个切换点 `peak`；正常应 ≥ 0.10，静音段约 0.003。
 - 尾屏：在最后一个切换点 +0.5s 之后抽帧（内容入场从 `ts+0.5` 开始）。
+- 封面：`cover_16x9` 1920×1080、`cover_4x3` 1440×1080；两张都要打开看，标题不能溢出、不能压住索引。

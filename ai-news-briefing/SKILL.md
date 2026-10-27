@@ -1,6 +1,6 @@
 ---
 name: ai-news-briefing
-description: 生成每日 AI 早报视频：聚合 ai-news-radar、AI HOT、follow-builders 与官方 RSS，抓取新闻原文截图作为可信参考，写入中文旁白与卡片，用 HyperFrames 渲染 4K 成片并验收。Use when the user asks for an AI 早报 / AI 日报视频 / 每日 AI 资讯成片 / daily AI briefing video, or wants to turn collected AI news into a rendered news video.
+description: 生成每日 AI 早报视频：聚合 ai-news-radar、AI HOT、follow-builders 与官方 RSS，抓取新闻原文截图作为可信参考，写入中文旁白与卡片，用 HyperFrames 渲染 4K 成片，自动生成 16:9/4:3 横版封面并验收。Use when the user asks for an AI 早报 / AI 日报视频 / 每日 AI 资讯成片 / daily AI briefing video, or wants to turn collected AI news into a rendered news video.
 ---
 
 # AI 早报视频
@@ -43,8 +43,8 @@ python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 2. **选稿**：从 `recommended` 里选 6–10 条。每条必须有可打开、可截图的原文页；优先官方公告、模型发布、产品更新；过滤周报/日报/观点文；不为时长删新闻。
 3. **证据截图**：写 `assets/evidence/evidence_plan.json`（字段见 `references/pipeline.md`），运行 `capture_evidence.py`。每张图必须能看到标题或正文；官方页不可截时用 IT之家、界面新闻、36氪、ITBear 等媒体报道，`label` 写 `媒体报道`。
 4. **写稿**：只使用截图正文和候选摘要里的事实；每条 1–2 句旁白、2 张卡片；写 `content.json`（schema 见 `references/content-schema.md`）；来源行写 `来源 · 域名 · 原文 <日期>`，截图脚注写 `截取 <日期>`。
-5. **构建**：`python build.py --speed 1.68`；首次加 `--force-tts`，改文案但复用配音时用 `--reuse-tts --reuse-master`。输出 `index.html`、`assets/audio/mix.wav`、`assets/audio/timeline.json`。
-6. **渲染与验收**：check → snapshot → render high → `verify_render.py`。门槛：check 0 error；快照里标题和来源截图看得清；ffprobe 确认 3840×2160 / 30fps / AAC 48k；点击音峰值 ≥ 0.10。
+5. **构建**：`python build.py --speed 1.68`；首次加 `--force-tts`，改文案但复用配音时用 `--reuse-tts --reuse-master`。输出 `index.html`、`assets/audio/mix.wav`、`assets/audio/timeline.json`，并自动生成 `out/covers/cover_16x9.png|jpg` 与 `cover_4x3.png|jpg`；加 `--no-covers` 可跳过。
+6. **渲染与验收**：check → snapshot → render high → `verify_render.py`。门槛：check 0 error；快照里标题和来源截图看得清；ffprobe 确认 3840×2160 / 30fps / AAC 48k；点击音峰值 ≥ 0.10；两张封面尺寸正确（16:9 1920×1080，4:3 1440×1080）。
 
 ## 硬规则
 
@@ -52,15 +52,18 @@ python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 - 官方一手源优先；X/社交/公众号默认单源，必须再有第二个来源才能进「要闻」。
 - 证据标签分三档：官方公告/官方博客/官方研究、媒体报道、技术博客；媒体源不允许写成官方。
 - 成片不设 30 秒上限，条数由内容价值决定。
+- 封面从 `content.json` 生成，不截视频帧；16:9 用于 B 站等横版平台，4:3 用于公众号/其他位置。
+- B 站发布默认只做 dry-run；`cookies.json` 不进仓库，用户明确说“发”才执行上传。
 - 混音避免最终 `loudnorm` 截断时长，用定长 PCM + 峰值归一。
 - 渲染前必须让 ffmpeg/ffprobe 在 PATH 或 `FFMPEG_BIN`/`FFPROBE_BIN` 中，否则 `render` 直接失败。
 
 ## 资源
 
-- `scaffold/`：可复制的工程脚手架（`build.py`、`template.tpl`、采集/截图/TTS 脚本、GSAP、示例 `content.json`、示例截图计划）
+- `scaffold/`：可复制的工程脚手架（`build.py`、`template.tpl`、采集/截图/TTS/封面脚本、GSAP、示例 `content.json`、示例截图计划）
 - `scripts/new_project.py`：创建工程、复制脚手架与字体
 - `scripts/verify_render.py`：ffprobe 规格 + 切换点点击音检查
 - `references/pipeline.md`：每步命令、字段与预期输出
 - `references/content-schema.md`：`content.json` 全字段
 - `references/troubleshooting.md`：本机网络、Chromium、GPU TTS、FFmpeg 等已知坑
 - `references/sources.md`：信息源、可信度分级与写稿红线
+- `references/bilibili.md`：biliup 自动投稿方案（可选，默认 dry-run）

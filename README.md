@@ -10,8 +10,8 @@
 2. **选稿与抓证据**：为每条新闻抓取原文页面截图，官方页打不开时使用可截图的媒体报道并标注来源类型。
 3. **写稿**：生成中文旁白、卡片文案、封面索引和 `content.json`（事实只来自截图正文与候选摘要）。
 4. **配音与合成**：本地 Qwen3-TTS（GPU 可用时自动 CUDA）或火山 TTS；生成双层进度条、点击音、擦除转场。
-5. **渲染**：HyperFrames 渲染 4K MP4，时长由内容决定，**不设 30 秒上限**。
-6. **验收**：HyperFrames `check` + 抽帧 + ffprobe + 切换点点击音检查。
+5. **渲染**：HyperFrames 渲染 4K MP4，时长由内容决定，**不设 30 秒上限**；同时生成 16:9 与 4:3 横版封面。
+6. **验收**：HyperFrames `check` + 抽帧 + ffprobe + 切换点点击音 + 封面尺寸检查。
 
 ## 仓库结构
 
@@ -20,12 +20,21 @@
 ├── ai-news-briefing/          # 技能包（复制到 skills 目录即可用）
 │   ├── SKILL.md
 │   ├── scripts/               # new_project.py / verify_render.py
-│   ├── references/            # 流程、content schema、故障排查、信息源策略
-│   └── scaffold/              # 工程脚手架：build.py、template.tpl、采集/截图/TTS 脚本
+│   ├── references/            # 流程、content schema、故障排查、信息源、B 站投稿
+│   └── scaffold/              # build.py、template.tpl、采集/截图/TTS/封面脚本
 ├── docs/preview-cover.jpg
 ├── LICENSE
 └── README.md
 ```
+
+## 封面
+
+构建结束会自动读 `content.json`，生成两张横版封面（不是截视频帧）：
+
+- `out/covers/cover_16x9.png|jpg`：1920×1080，适合 B 站等横版平台
+- `out/covers/cover_4x3.png|jpg`：1440×1080，适合公众号/其他位置
+- 16:9 显示前 4 条索引 + “还有 N 条”，4:3 列出全部 8 条
+- JPG 单张 < 5MB，满足 B 站封面要求
 
 ## 安装
 
@@ -66,11 +75,16 @@ npx --yes hyperframes@0.8.197 render --quality high --output out/ai_brief_4k.mp4
 python ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 ```
 
+## B 站发布（可选）
+
+可以用 [biliup](https://github.com/biliup/biliup) 自动投稿：先在本机 `biliup login` 扫码登录，再用 `biliup upload` 传视频、标题、分区、标签和 16:9 封面。默认只做 dry-run 预览，用户明确说“发”再执行；`cookies.json` 不进仓库。详见 `ai-news-briefing/references/bilibili.md`。
+
 ## 已验证
 
 - 脚手架工程 `hyperframes check`：**Check passed**，Lint 0 error、Layout 0 error、Motion 0 error。
 - 实测成片：3840×2160 / 30fps / H.264 + AAC 48k / 58.434s，9 个切换点点击音峰值 ≈ 0.475，静音段 0.003。
 - 采集实测：单日 200+ 条候选，去重后 227 条，官方/多源/单源三档可信度标注。
+- 封面实测：16:9 1920×1080、4:3 1440×1080，JPG 单张约 0.2MB。
 
 ## 第三方与版权
 

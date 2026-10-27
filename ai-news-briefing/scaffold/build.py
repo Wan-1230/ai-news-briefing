@@ -517,6 +517,7 @@ def main() -> None:
     ap.add_argument("--reuse-master", action="store_true", help="reuse vo_*.wav when present")
     ap.add_argument("--no-audio", action="store_true", help="only regenerate HTML/timeline")
     ap.add_argument("--no-mix", action="store_true", help="skip audio mix generation")
+    ap.add_argument("--no-covers", action="store_true", help="skip 16:9 / 4:3 cover generation")
     args = ap.parse_args()
 
     content = json.loads((PROJ / "content.json").read_text(encoding="utf-8"))
@@ -600,6 +601,13 @@ def main() -> None:
     )
     (PROJ / "index.html").write_text(html_out, encoding="utf-8")
     print(f"[html] duration={total:.3f}s screens={len(screens)}")
+    if not args.no_covers:
+        try:
+            from scripts.make_covers import generate_covers
+            covers = generate_covers(PROJ)
+            print(f"[covers] {', '.join(p.name for p in covers)}")
+        except Exception as exc:
+            print(f"[covers] skipped: {type(exc).__name__}: {exc}")
     for tr in timeline["transitions"]:
         print(f"[cut] {tr['at']:6.2f}s  {tr['from']} -> {tr['to']}  click={tr['clickAt']:.2f}")
 

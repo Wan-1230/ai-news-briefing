@@ -60,6 +60,7 @@ def main() -> int:
     parser.add_argument("video", help="成片 MP4 路径")
     parser.add_argument("--mix", default="assets/audio/mix.wav", help="混音文件，用于点击音检查")
     parser.add_argument("--timeline", default="assets/audio/timeline.json", help="时间轴文件")
+    parser.add_argument("--covers-dir", default="out/covers", help="封面目录")
     args = parser.parse_args()
 
     video = Path(args.video).resolve()
@@ -93,6 +94,23 @@ def main() -> int:
             print(line)
     else:
         print("[clicks] 缺少 mix.wav 或 timeline.json，跳过")
+
+    covers_dir = Path(args.covers_dir)
+    expected = {"cover_16x9.png": (1920, 1080), "cover_4x3.png": (1440, 1080)}
+    if covers_dir.exists():
+        try:
+            from PIL import Image
+            for name, size in expected.items():
+                path = covers_dir / name
+                if not path.exists():
+                    print(f"[cover] missing {path}")
+                    continue
+                image = Image.open(path)
+                print(f"[cover] {name} {image.size[0]}x{image.size[1]} ({'ok' if image.size == size else 'unexpected'})")
+        except ImportError:
+            print("[cover] Pillow 未安装，跳过尺寸检查")
+    else:
+        print(f"[cover] 缺少 {covers_dir}")
     return 0
 
 
