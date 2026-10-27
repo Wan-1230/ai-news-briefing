@@ -45,7 +45,8 @@
 |---|---|
 | `id` | 必须是 `cover` |
 | `kicker` | 左上角小字 |
-| `title` / `subtitle` | 主标题、副标题 |
+| `title` / `subtitle` | 视频封面屏主标题、副标题 |
+| `headline` | 封面图专用钩子标题；不填时回退 `title`。必须基于事实，不能编造数字 |
 | `caption` | 底部字幕条 |
 | `narration` | 开场旁白，通常 30–50 字 |
 | `issueStamp` | 背景大号日期，如 `10.26` |

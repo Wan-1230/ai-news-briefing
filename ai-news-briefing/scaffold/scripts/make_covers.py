@@ -64,7 +64,7 @@ def build_html(content: dict, variant: str, project: Path) -> str:
     meta = content.get("meta", {})
     date = meta.get("date", cover.get("kicker", ""))
     issue = meta.get("issue", cover.get("issueStamp", ""))
-    title = cover.get("title", "")
+    title = cover.get("headline") or cover.get("title", "")
     subtitle = cover.get("subtitle", "")
     kicker = cover.get("kicker", f"AI 早报 · {date}")
     caption = cover.get("caption", "欢迎收听今天的 AI 早报")

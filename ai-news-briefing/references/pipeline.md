@@ -108,7 +108,8 @@ python build.py --reuse-tts --reuse-master --speed 1.68   # 改文案/改布局�
 - 16:9：1920×1080，用于 B 站等横版平台；JPG < 5MB，满足 B 站 ≥1146×717 的要求。
 - 4:3：1440×1080，用于公众号、小红书、站内推荐等位置。
 - 两张都输出 PNG（无损）和 JPG（上传用）。
-- 文案来源：`cover.title / subtitle / caption / index / meta`；索引 16:9 显示前 4 条，4:3 显示全部（最多 8 条）。
+- 大标题优先读 `cover.headline`，没有就回退 `cover.title`；钩子必须基于事实，不能编造数字。
+- 其余文案来源：`cover.subtitle / caption / index / meta`；索引 16:9 显示前 4 条，4:3 显示全部（最多 8 条）。
 - 字体缺失会显示方框；确保 `assets/fonts/NotoSansSC-VF.ttf` 和 `NotoSerifSC-VF.ttf` 存在。
 - 标题太长时改 `make_covers.py` 里的 `.title` 字号/`max-width`，或缩短 `cover.title`。
 

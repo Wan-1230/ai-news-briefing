@@ -42,7 +42,7 @@ python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 1. **采集候选**：`python scripts/collect_daily.py --top 20 --recommend 8`。合并 ai-news-radar、AI HOT、follow-builders、OpenAI/DeepMind RSS，输出去重后的 `out/daily/candidates-<date>.json|md`。门槛：候选池 ≥ 100，推荐里至少 2 条官方确认。
 2. **选稿**：从 `recommended` 里选 6–10 条。每条必须有可打开、可截图的原文页；优先官方公告、模型发布、产品更新；过滤周报/日报/观点文；不为时长删新闻。
 3. **证据截图**：写 `assets/evidence/evidence_plan.json`（字段见 `references/pipeline.md`），运行 `capture_evidence.py`。每张图必须能看到标题或正文；官方页不可截时用 IT之家、界面新闻、36氪、ITBear 等媒体报道，`label` 写 `媒体报道`。
-4. **写稿**：只使用截图正文和候选摘要里的事实；每条 1–2 句旁白、2 张卡片；写 `content.json`（schema 见 `references/content-schema.md`）；来源行写 `来源 · 域名 · 原文 <日期>`，截图脚注写 `截取 <日期>`。
+4. **写稿**：只使用截图正文和候选摘要里的事实；每条 1–2 句旁白、2 张卡片；写 `content.json`（schema 见 `references/content-schema.md`）；来源行写 `来源 · 域名 · 原文 <日期>`，截图脚注写 `截取 <日期>`。封面图的大标题单独写 `cover.headline`：用“冲突/结果/数字”做钩子（如“AI 资本战开打：…”），不要直接复用视频主标题，也不能编造数字。
 5. **构建**：`python build.py --speed 1.68`；首次加 `--force-tts`，改文案但复用配音时用 `--reuse-tts --reuse-master`。输出 `index.html`、`assets/audio/mix.wav`、`assets/audio/timeline.json`，并自动生成 `out/covers/cover_16x9.png|jpg` 与 `cover_4x3.png|jpg`；加 `--no-covers` 可跳过。
 6. **渲染与验收**：check → snapshot → render high → `verify_render.py`。门槛：check 0 error；快照里标题和来源截图看得清；ffprobe 确认 3840×2160 / 30fps / AAC 48k；点击音峰值 ≥ 0.10；两张封面尺寸正确（16:9 1920×1080，4:3 1440×1080）。
 

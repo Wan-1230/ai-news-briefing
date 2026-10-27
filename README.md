@@ -33,6 +33,7 @@
 
 - `out/covers/cover_16x9.png|jpg`：1920×1080，适合 B 站等横版平台
 - `out/covers/cover_4x3.png|jpg`：1440×1080，适合公众号/其他位置
+- 大标题优先读 `cover.headline`，用“冲突/结果/数字”做钩子，不直接复用视频主标题；没填时回退 `cover.title`
 - 16:9 显示前 4 条索引 + “还有 N 条”，4:3 列出全部 8 条
 - JPG 单张 < 5MB，满足 B 站封面要求
 
@@ -77,7 +78,7 @@ python ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 
 ## B 站发布（可选）
 
-可以用 [biliup](https://github.com/biliup/biliup) 自动投稿：先在本机 `biliup login` 扫码登录，再用 `biliup upload` 传视频、标题、分区、标签和 16:9 封面。默认只做 dry-run 预览，用户明确说“发”再执行；`cookies.json` 不进仓库。详见 `ai-news-briefing/references/bilibili.md`。
+可以用 [biliup](https://github.com/biliup/biliup) 自动投稿：先在本机扫码登录，再用 `biliup upload` 传视频、标题、分区、标签和 16:9 封面；上传成功后用 `biliup season add --vid <BV> <SECTION_ID>` 加入“AI早报”合集的“正片”小节。默认只做 dry-run 预览，用户明确说“发”再执行；`cookies.json` 不进仓库。详见 `ai-news-briefing/references/bilibili.md`。
 
 ## 已验证
 
@@ -85,6 +86,7 @@ python ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 - 实测成片：3840×2160 / 30fps / H.264 + AAC 48k / 58.434s，9 个切换点点击音峰值 ≈ 0.475，静音段 0.003。
 - 采集实测：单日 200+ 条候选，去重后 227 条，官方/多源/单源三档可信度标注。
 - 封面实测：16:9 1920×1080、4:3 1440×1080，JPG 单张约 0.2MB。
+- B 站实测：biliup 1.3.4 上传 4K 成片成功，并加入“AI早报”合集“正片”小节（2026-10-28）。
 
 ## 第三方与版权
 

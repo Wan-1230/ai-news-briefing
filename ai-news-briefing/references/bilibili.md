@@ -37,13 +37,32 @@ biliup -u cookies.json upload out/hf_news_1026_4k.mp4 `
 - 分区 `tid` 选错会影响推荐；AI 资讯通常选科技/数码相关分区，拿不准让用户确认。
 - 定时投稿用 biliup 的定时参数（以 `upload --help` 为准）。
 
+## 加入合集（必做）
+
+上传成功后，用 BV 号把稿件加入“AI早报”合集的“正片”小节：
+
+```powershell
+# 1) 查自己的合集和小节 ID
+biliup -u cookies.json season list
+
+# 2) 上传成功后加入小节（<BV> 替换为上传返回的 BV 号）
+biliup -u cookies.json season add --vid <BV> <SECTION_ID>
+
+# 3) 确认小节里已有稿件
+biliup -u cookies.json season sections <SEASON_ID>
+```
+
+- 合集 ID 和小节 ID 在 `season list` 输出里；每个账号不同，不要硬编码到公共脚本。
+- 合集加入失败不影响稿件本身，但要在日志里明确记录，不能当成发布成功。
+- 2026-10-28 实测：`biliup 1.3.4` 上传 4K 成片成功，随后 `season add` 加入“正片”小节成功；上传耗时 63.66s。
+
 ## 风险与边界
 
 - B 站有上传风控，短时间频繁投稿可能返回 `601 上传视频过快`；不要批量并发。
 - `cookies.json` 是账号凭证：只放本地，不提交 Git，不贴聊天记录。
 - 社区接口可能随 B 站改版失效；biliup 需要保持更新。
 - **默认不自动发布**：先生成封面、标题、简介、标签和 SRT，给用户 dry-run 预览；用户明确说“发”再执行上传。
-- 目前 skill 只提供这份操作说明；`publish_bilibili.py` 包装脚本尚未加入，需要时再实现并做真实登录联调。
+- 目前 skill 只提供这份操作说明；`publish_bilibili.py` 包装脚本尚未加入。实际流程已跑通：Web 扫码登录 → `biliup upload` → `biliup season add`。
 
 ## 为什么不用官方开放平台
 
