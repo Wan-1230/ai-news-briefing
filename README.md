@@ -20,7 +20,7 @@
 ├── ai-news-briefing/          # 技能包（复制到 skills 目录即可用）
 │   ├── SKILL.md
 │   ├── scripts/               # new_project.py / verify_render.py
-│   ├── references/            # 流程、content schema、故障排查、信息源、B 站投稿
+│   ├── references/            # 流程、content schema、封面设计、故障排查、信息源、B 站投稿
 │   └── scaffold/              # build.py、template.tpl、采集/截图/TTS/封面脚本
 ├── docs/preview-cover.jpg
 ├── LICENSE
@@ -36,6 +36,7 @@
 - 版式参照 B 站缩略图：深色底、超大 `cover.hook_lines`（1–3 行、每行 2–6 字）、右侧/底部厂商 logo 墙、一行 `cover.subhook` 事实
 - 封面不放 8 条索引小字；缩略图尺寸下先读大字
 - JPG 单张 < 5MB，满足 B 站封面要求
+- 版式、钩子公式、尺寸与自检见 [`references/cover-design.md`](ai-news-briefing/references/cover-design.md)
 
 ## 安装
 

@@ -7,3 +7,5 @@ renders/
 assets/audio/
 assets/evidence/*.png
 node_modules/
+# local-only third-party reference image
+ai-news-briefing/references/assets/cover-reference-bilibili.png
