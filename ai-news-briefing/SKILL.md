@@ -35,6 +35,9 @@ npx --yes hyperframes@0.8.197 check
 npx --yes hyperframes@0.8.197 snapshot --at 2,9,20,49,57.5 --output out/snap --no-end
 npx --yes hyperframes@0.8.197 render --quality high --output out/ai_brief_4k.mp4
 python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
+# 可选：B 站发布（默认 dry-run，确认后加 --execute）
+python scripts/publish_bilibili.py --project . --cookie <cookies.json> \
+  --season-id <合集ID> --section-id <小节ID>
 ```
 
 ## 六步流程与门槛
@@ -45,6 +48,7 @@ python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 4. **写稿**：只使用截图正文和候选摘要里的事实；每条 1–2 句旁白、2 张卡片；写 `content.json`（schema 见 `references/content-schema.md`）；来源行写 `来源 · 域名 · 原文 <日期>`，截图脚注写 `截取 <日期>`。封面图的大标题单独写 `cover.headline`：用“冲突/结果/数字”做钩子（如“AI 资本战开打：…”），不要直接复用视频主标题，也不能编造数字。
 5. **构建**：`python build.py --speed 1.68`；首次加 `--force-tts`，改文案但复用配音时用 `--reuse-tts --reuse-master`。输出 `index.html`、`assets/audio/mix.wav`、`assets/audio/timeline.json`，并自动生成 `out/covers/cover_16x9.png|jpg` 与 `cover_4x3.png|jpg`；加 `--no-covers` 可跳过。
 6. **渲染与验收**：check → snapshot → render high → `verify_render.py`。门槛：check 0 error；快照里标题和来源截图看得清；ffprobe 确认 3840×2160 / 30fps / AAC 48k；点击音峰值 ≥ 0.10；两张封面尺寸正确（16:9 1920×1080，4:3 1440×1080）。
+7. **B 站发布（可选）**：`python scripts/publish_bilibili.py --project . --cookie <cookies.json> --season-id <合集ID> --section-id <小节ID>` 先 dry-run；确认后加 `--execute`。脚本会上传视频、解析 BV，再 `biliup season add` 加入合集；`--skip-season` 可跳过合集。
 
 ## 硬规则
 
@@ -59,7 +63,7 @@ python ../ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 
 ## 资源
 
-- `scaffold/`：可复制的工程脚手架（`build.py`、`template.tpl`、采集/截图/TTS/封面脚本、GSAP、示例 `content.json`、示例截图计划）
+- `scaffold/`：可复制的工程脚手架（`build.py`、`template.tpl`、采集/截图/TTS/封面/发布脚本、GSAP、示例 `content.json`、示例截图计划）
 - `scripts/new_project.py`：创建工程、复制脚手架与字体
 - `scripts/verify_render.py`：ffprobe 规格 + 切换点点击音检查
 - `references/pipeline.md`：每步命令、字段与预期输出

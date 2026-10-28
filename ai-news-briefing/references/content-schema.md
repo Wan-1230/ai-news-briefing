@@ -27,6 +27,7 @@
 | 字段 | 说明 |
 |---|---|
 | `date` / `issue` | 用于导航日期和封面角标；日期取系统时间，不猜 |
+| `publish_title` | 可选，B 站投稿标题；不填时用 `cover.title` + `AI 早报 <issue>` |
 | `voice_provider` | `qwen-local` 或 `volcengine`；`build.py --provider` 可覆盖 |
 | `voice_speaker` | Qwen 音色名，默认 `Serena` |
 | `voice_note` | 音色缺口说明，会写进工程备注 |

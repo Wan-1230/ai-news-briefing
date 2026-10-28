@@ -17,7 +17,26 @@
    biliup upload --help
    ```
 
-## 推荐流程
+## 用 skill 脚本（推荐）
+
+```bash
+# 默认 dry-run，只打印标题/简介/标签/上传与合集命令
+python scripts/publish_bilibili.py --project . \
+  --cookie ../../.bili/data/<mid>.json \
+  --season-id <SEASON_ID> --section-id <SECTION_ID>
+
+# 确认参数后真发
+python scripts/publish_bilibili.py --project . \
+  --cookie ../../.bili/data/<mid>.json \
+  --season-id <SEASON_ID> --section-id <SECTION_ID> --execute
+```
+
+- 标题/简介/标签默认从 `content.json` 和 `timeline.json` 生成；可用 `--title/--desc/--tags/--tid` 覆盖。
+- 封面默认 `out/covers/cover_16x9.jpg`；脚本会检查 16:9、≥1146×717、<5MB。
+- 上传成功后自动解析 BV，再执行 `season add`；`--skip-season` 可跳过。
+- 发布日志写到 `out/publish-<BV>.json`（不含 cookie）。
+
+## 手写命令（备查）
 
 ```powershell
 # 1) 先 dry-run，只打印参数，不投稿

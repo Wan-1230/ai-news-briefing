@@ -78,7 +78,17 @@ python ai-news-briefing/scripts/verify_render.py out/ai_brief_4k.mp4
 
 ## B 站发布（可选）
 
-可以用 [biliup](https://github.com/biliup/biliup) 自动投稿：先在本机扫码登录，再用 `biliup upload` 传视频、标题、分区、标签和 16:9 封面；上传成功后用 `biliup season add --vid <BV> <SECTION_ID>` 加入“AI早报”合集的“正片”小节。默认只做 dry-run 预览，用户明确说“发”再执行；`cookies.json` 不进仓库。详见 `ai-news-briefing/references/bilibili.md`。
+可以用 [biliup](https://github.com/biliup/biliup) 自动投稿：先在本机扫码登录，再用 `biliup upload` 传视频、标题、分区、标签和 16:9 封面；上传成功后用 `biliup season add --vid <BV> <SECTION_ID>` 加入“AI早报”合集的“正片”小节。
+
+脚手架里的 `scripts/publish_bilibili.py` 把这两步串起来：
+
+```bash
+python scripts/publish_bilibili.py --project . --cookie <cookies.json> \
+  --season-id <合集ID> --section-id <小节ID>          # dry-run
+  # 确认后加 --execute
+```
+
+默认只做 dry-run 预览，用户明确说“发”再执行；`cookies.json` 不进仓库。详见 `ai-news-briefing/references/bilibili.md`。
 
 ## 已验证
 
