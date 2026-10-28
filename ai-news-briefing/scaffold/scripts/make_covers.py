@@ -113,7 +113,7 @@ def build_html(content: dict, variant: str, project: Path) -> str:
     meta_line = cover.get("subtitle", "")
     keys = logo_keys(cover, stories)
     logos = "".join(logo_cell(key, project) for key in keys)
-    hook_size = font_size(hook_lines, 226 if variant == "16x9" else 172)
+    hook_size = font_size(hook_lines, 250 if variant == "16x9" else 192)
     hook_html = []
     for index, line in enumerate(hook_lines):
         cls = "line accent" if index == accent_index else "line"
@@ -137,43 +137,43 @@ html, body {{ margin: 0; padding: 0; background: #141210; color: #F7F1E4; font-f
 .cover::after {{ content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .16;
   background-image: radial-gradient(rgba(247,241,228,.16) .6px, transparent .6px);
   background-size: 5px 5px; }}
-.topbar {{ position: absolute; top: 50px; left: 64px; right: 64px; display: flex;
+.topbar {{ position: absolute; top: 50px; left: 100px; right: 100px; display: flex;
   justify-content: space-between; align-items: center; z-index: 2; }}
-.brand {{ display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 26px; letter-spacing: .08em; }}
+.brand {{ display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 28px; letter-spacing: .08em; }}
 .brand i {{ width: 12px; height: 12px; border-radius: 50%; background: #E85D2A; display: inline-block; }}
-.date {{ font-size: 17px; letter-spacing: .08em; color: #A99B8C; }}
-.layout {{ position: absolute; left: 56px; right: 56px; top: 120px; bottom: 72px; display: grid;
-  grid-template-columns: 1.55fr .85fr; gap: 44px; z-index: 2; }}
+.date {{ font-size: 18px; letter-spacing: .08em; color: #A99B8C; }}
+.layout {{ position: absolute; left: 100px; right: 100px; top: 120px; bottom: 72px; display: grid;
+  grid-template-columns: 1.58fr .82fr; gap: 24px; z-index: 2; }}
 .copy {{ min-width: 0; display: flex; flex-direction: column; justify-content: center; }}
 .hook {{ font-family: "HF Serif", serif; font-weight: 900; font-size: {hook_size}px;
-  line-height: .92; letter-spacing: -.05em; max-width: 1180px; }}
+  line-height: .92; letter-spacing: -.055em; max-width: 1200px; }}
 .hook .line {{ display: block; white-space: nowrap; }}
 .hook .accent {{ display: inline-block; margin-top: 18px; padding: 0 14px 4px;
   background: #E85D2A; color: #141210; }}
-.subhook {{ margin: 32px 0 0; font-size: 44px; line-height: 1.3; letter-spacing: -.015em; color: #F7F1E4; max-width: 1150px; }}
-.meta {{ margin: 16px 0 0; font-size: 22px; letter-spacing: .05em; color: #B8A999; }}
-.logos {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 14px;
+.subhook {{ margin: 30px 0 0; font-size: 48px; line-height: 1.28; letter-spacing: -.02em; color: #F7F1E4; max-width: 1180px; }}
+.meta {{ margin: 14px 0 0; font-size: 24px; letter-spacing: .05em; color: #B8A999; }}
+.logos {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px 12px;
   align-content: center; justify-items: center; }}
 .logo {{ text-align: center; min-width: 0; }}
-.logo-img {{ width: 112px; height: 112px; display: grid; place-items: center; margin: 0 auto 10px; }}
-.logo-img img {{ width: 100px; height: 100px; object-fit: contain; filter: brightness(0) invert(1); }}
+.logo-img {{ width: 128px; height: 128px; display: grid; place-items: center; margin: 0 auto 10px; }}
+.logo-img img {{ width: 116px; height: 116px; object-fit: contain; filter: brightness(0) invert(1); }}
 .logo-img .logo-word {{ font-size: 26px; font-weight: 800; color: #F7F1E4; white-space: nowrap; }}
-.logo span {{ display: block; font-size: 18px; color: #D3C5B4; letter-spacing: .02em; white-space: nowrap; }}
+.logo span {{ display: block; font-size: 19px; color: #D3C5B4; letter-spacing: .02em; white-space: nowrap; }}
 .issue {{ position: absolute; right: 30px; bottom: 40px; z-index: 1;
   font-family: Georgia, serif; font-size: 210px; line-height: .8; letter-spacing: -.06em;
   color: rgba(247,241,228,.05); }}
-.foot {{ position: absolute; left: 64px; right: 64px; bottom: 26px; display: flex;
+.foot {{ position: absolute; left: 100px; right: 100px; bottom: 26px; display: flex;
   justify-content: space-between; font-size: 15px; letter-spacing: .08em; color: #A99B8C; z-index: 2; }}
-.portrait .layout {{ display: grid; grid-template-columns: 1.3fr .7fr; gap: 24px; top: 100px; bottom: 64px; left: 48px; right: 48px; }}
+.portrait .layout {{ display: grid; grid-template-columns: 1.3fr .7fr; gap: 16px; top: 100px; bottom: 64px; left: 80px; right: 80px; }}
 .portrait .copy {{ justify-content: center; }}
-.portrait .hook {{ font-size: {hook_size}px; max-width: 880px; }}
-.portrait .subhook {{ font-size: 32px; margin-top: 24px; max-width: 840px; }}
-.portrait .meta {{ font-size: 19px; margin-top: 12px; }}
-.portrait .logos {{ grid-template-columns: repeat(2, 1fr); gap: 22px 10px; align-content: center;
+.portrait .hook {{ font-size: {hook_size}px; max-width: 920px; }}
+.portrait .subhook {{ font-size: 34px; margin-top: 22px; max-width: 880px; }}
+.portrait .meta {{ font-size: 20px; margin-top: 10px; }}
+.portrait .logos {{ grid-template-columns: repeat(2, 1fr); gap: 26px 8px; align-content: center;
   justify-items: center; border-top: 0; padding-top: 0; margin-top: 0; }}
-.portrait .logo-img {{ width: 96px; height: 96px; margin-bottom: 7px; }}
-.portrait .logo-img img {{ width: 88px; height: 88px; }}
-.portrait .logo span {{ font-size: 16px; }}
+.portrait .logo-img {{ width: 108px; height: 108px; margin-bottom: 7px; }}
+.portrait .logo-img img {{ width: 98px; height: 98px; }}
+.portrait .logo span {{ font-size: 17px; }}
 .portrait .issue {{ font-size: 150px; right: 24px; bottom: 40px; }}
 </style>
 </head>
