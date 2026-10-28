@@ -103,15 +103,16 @@ python build.py --reuse-tts --reuse-master --speed 1.68   # 改文案/改布局�
 
 ## 6. 封面
 
-封面不是截视频帧，而是读 `content.json` 的封面标题、副标题、索引、日期和厂家重新排版：
+封面不是截视频帧，而是按 B 站缩略图逻辑重排：**超大钩子 + 厂商 logo 墙 + 一行副钩子**。
 
 - 16:9：1920×1080，用于 B 站等横版平台；JPG < 5MB，满足 B 站 ≥1146×717 的要求。
-- 4:3：1440×1080，用于公众号、小红书、站内推荐等位置。
+- 4:3：1440×1080，用于公众号、小红书、站内推荐等位置；左侧大字、右侧 2×3 logo 墙。
 - 两张都输出 PNG（无损）和 JPG（上传用）。
-- 大标题优先读 `cover.headline`，没有就回退 `cover.title`；钩子必须基于事实，不能编造数字。
-- 其余文案来源：`cover.subtitle / caption / index / meta`；索引 16:9 显示前 4 条，4:3 显示全部（最多 8 条）。
+- 大标题：`cover.hook_lines`，1–3 行，每行 2–6 字；`cover.headline` 只作长文案/备选。钩子必须有事实支撑。
+- 副钩子：`cover.subhook`，一行事实；不要放 8 条索引小字。
+- Logo：`cover.logos` 指定 key，素材在 `assets/logos/`；可用 `openai/anthropic/meta/kimi/minimax/kuaishou/vllm/deepseek`，缺文件时自动退化为文字标。
 - 字体缺失会显示方框；确保 `assets/fonts/NotoSansSC-VF.ttf` 和 `NotoSerifSC-VF.ttf` 存在。
-- 标题太长时改 `make_covers.py` 里的 `.title` 字号/`max-width`，或缩短 `cover.title`。
+- 钩子太长时减少每行字数，或调 `make_covers.py` 的 `font_size()`；不要让大字缩到失去冲击力。
 
 ## 7. 渲染与验收
 

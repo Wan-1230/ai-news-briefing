@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""根据 content.json 生成 16:9 与 4:3 横屏封面。"""
+"""根据 content.json 生成 16:9 与 4:3 的 B 站风格封面。"""
 
 from __future__ import annotations
 
@@ -16,6 +16,29 @@ VARIANTS = (
     ("16x9", 1920, 1080, 1920, 1080),
     ("4x3", 1440, 1080, 1440, 1080),
 )
+
+LOGO_MAP = {
+    "openai": ("openai.svg", "OpenAI"),
+    "anthropic": ("anthropic.svg", "Anthropic"),
+    "meta": ("meta.svg", "Meta"),
+    "kimi": ("kimi.svg", "Kimi"),
+    "minimax": ("minimax.svg", "MiniMax"),
+    "kuaishou": ("kuaishou.svg", "快手·可灵"),
+    "vllm": ("vllm.svg", "vLLM"),
+    "deepseek": ("deepseek.svg", "DeepSeek"),
+}
+
+VENDOR_KEY = {
+    "OpenAI": "openai",
+    "Anthropic": "anthropic",
+    "Meta": "meta",
+    "Kimi": "kimi",
+    "MiniMax": "minimax",
+    "快手": "kuaishou",
+    "Kuaishou": "kuaishou",
+    "vLLM": "vllm",
+    "DeepSeek": "deepseek",
+}
 
 
 def find_chromium() -> Path | None:
@@ -44,58 +67,59 @@ def esc(value) -> str:
     return html.escape(str(value), quote=True)
 
 
-def category_color(content: dict, category: str) -> str:
-    for screen in content["screens"]:
-        if screen.get("category") == category:
-            return screen.get("categoryColor") or "#C8552C"
-    return "#C8552C"
+def logo_keys(cover: dict, stories: list[dict]) -> list[str]:
+    explicit = cover.get("logos")
+    if explicit:
+        return [key for key in explicit if key in LOGO_MAP][:8]
+    keys = []
+    for story in stories:
+        key = VENDOR_KEY.get(story.get("vendor"))
+        if key and key not in keys:
+            keys.append(key)
+    return keys[:6] or ["openai", "anthropic", "meta", "kimi", "minimax", "kuaishou"]
 
 
-def vendor_color(content: dict, vendor: str) -> str:
-    for screen in content["screens"]:
-        if screen.get("vendor") == vendor:
-            return screen.get("vendorColor") or "#2B2620"
-    return "#2B2620"
+def logo_cell(key: str, project: Path) -> str:
+    filename, name = LOGO_MAP.get(key, (None, key))
+    src = project / "assets" / "logos" / filename if filename else None
+    if src and src.exists():
+        visual = f'<img src="{src.resolve().as_uri()}" alt="{esc(name)}" />'
+    else:
+        visual = f'<span class="logo-word">{esc(name)}</span>'
+    return f'<div class="logo"><div class="logo-img">{visual}</div><span>{esc(name)}</span></div>'
+
+
+def font_size(lines: list[str], base: int) -> int:
+    longest = max((len(line) for line in lines), default=1)
+    if longest > 9:
+        return int(base * 0.62)
+    if longest > 7:
+        return int(base * 0.74)
+    if longest > 5:
+        return int(base * 0.86)
+    return base
 
 
 def build_html(content: dict, variant: str, project: Path) -> str:
     cover = content["screens"][0]
-    stories = [s for s in content["screens"] if s["type"] == "story"]
+    stories = [s for s in content["screens"] if s.get("type") == "story"]
     meta = content.get("meta", {})
-    date = meta.get("date", cover.get("kicker", ""))
+    date = meta.get("date", "")
     issue = meta.get("issue", cover.get("issueStamp", ""))
-    title = cover.get("headline") or cover.get("title", "")
-    subtitle = cover.get("subtitle", "")
-    kicker = cover.get("kicker", f"AI 早报 · {date}")
-    caption = cover.get("caption", "欢迎收听今天的 AI 早报")
-    all_index = cover.get("index", [])
-    index = all_index[:4] if variant == "16x9" else all_index[:8]
-    rows = []
-    for i, item in enumerate(index, 1):
-        color = category_color(content, item.get("cat", "要闻"))
-        rows.append(
-            '<div class="row">'
-            f'<span class="no">{i:02d}</span>'
-            f'<span class="cat" style="--c:{esc(color)}"><i></i>{esc(item.get("cat", "要闻"))}</span>'
-            f'<span class="text">{esc(item.get("text", ""))}</span>'
-            "</div>"
-        )
-    vendors = []
-    seen = set()
-    for story in stories:
-        vendor = story.get("vendor")
-        if not vendor or vendor in seen:
-            continue
-        seen.add(vendor)
-        vendors.append(
-            f'<span class="chip"><i style="background:{esc(vendor_color(content, vendor))}"></i>{esc(vendor)}</span>'
-        )
-        if len(vendors) >= 7:
-            break
+    headline = cover.get("headline") or cover.get("title", "")
+    hook_lines = cover.get("hook_lines") or [headline]
+    accent_index = cover.get("hook_accent", len(hook_lines) - 1)
+    subhook = cover.get("subhook") or cover.get("subtitle", "")
+    meta_line = cover.get("subtitle", "")
+    keys = logo_keys(cover, stories)
+    logos = "".join(logo_cell(key, project) for key in keys)
+    hook_size = font_size(hook_lines, 196 if variant == "16x9" else 150)
+    hook_html = []
+    for index, line in enumerate(hook_lines):
+        cls = "line accent" if index == accent_index else "line"
+        hook_html.append(f'<span class="{cls}">{esc(line)}</span>')
     font_sans = (project / "assets" / "fonts" / "NotoSansSC-VF.ttf").resolve().as_uri()
     font_serif = (project / "assets" / "fonts" / "NotoSerifSC-VF.ttf").resolve().as_uri()
-    more = len(stories) - len(index)
-    more_line = f'<div class="more">还有 {more} 条，详见视频</div>' if more > 0 else ""
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -104,94 +128,70 @@ def build_html(content: dict, variant: str, project: Path) -> str:
 @font-face {{ font-family: "HF Sans"; src: url("{font_sans}") format("truetype"); font-weight: 100 900; font-display: block; }}
 @font-face {{ font-family: "HF Serif"; src: url("{font_serif}") format("truetype"); font-weight: 100 900; font-display: block; }}
 * {{ box-sizing: border-box; }}
-html, body {{ margin: 0; padding: 0; background: #F7F1E4; color: #2B2620; font-family: "HF Sans", sans-serif; }}
+html, body {{ margin: 0; padding: 0; background: #141210; color: #F7F1E4; font-family: "HF Sans", sans-serif; }}
 .cover {{ position: relative; width: 100vw; height: 100vh; overflow: hidden;
   background:
-    radial-gradient(circle at 88% 6%, rgba(200,85,44,.12), transparent 34%),
-    radial-gradient(circle at 8% 96%, rgba(90,90,140,.08), transparent 38%),
-    #F7F1E4; }}
-.cover::after {{ content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .22;
-  background-image: radial-gradient(rgba(43,38,32,.10) .6px, transparent .6px);
+    radial-gradient(circle at 10% 8%, rgba(232,93,42,.24), transparent 34%),
+    radial-gradient(circle at 92% 88%, rgba(247,241,228,.06), transparent 40%),
+    #141210; }}
+.cover::after {{ content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .16;
+  background-image: radial-gradient(rgba(247,241,228,.16) .6px, transparent .6px);
   background-size: 5px 5px; }}
-.masthead {{ position: absolute; top: 52px; left: 64px; right: 64px; display: flex;
+.topbar {{ position: absolute; top: 50px; left: 64px; right: 64px; display: flex;
   justify-content: space-between; align-items: center; z-index: 2; }}
 .brand {{ display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 26px; letter-spacing: .08em; }}
-.brand i {{ width: 12px; height: 12px; border-radius: 50%; background: #C8552C; display: inline-block; }}
-.date-line {{ font-size: 18px; letter-spacing: .10em; color: #6E6459; }}
-.layout {{ position: absolute; left: 64px; right: 64px; top: 138px; bottom: 74px; display: grid;
-  grid-template-columns: 1.62fr .78fr; gap: 54px; z-index: 2; }}
-.copy {{ min-width: 0; }}
-.kicker {{ font-size: 18px; letter-spacing: .12em; color: #A8461F; margin-bottom: 22px; }}
-.title {{ margin: 0; font-family: "HF Serif", serif; font-weight: 900; font-size: 104px;
-  line-height: 1.08; letter-spacing: -.03em; max-width: 1100px; }}
-.sub {{ margin: 24px 0 0; font-size: 27px; line-height: 1.5; color: #5F564B; }}
-.rule {{ width: 120px; height: 5px; border-radius: 3px; background: #C8552C; margin: 30px 0 24px; }}
-.headlines {{ display: flex; flex-direction: column; gap: 0; }}
-.row {{ display: grid; grid-template-columns: 42px 104px 1fr; gap: 14px; align-items: center;
-  padding: 13px 0; border-bottom: 1px solid rgba(228,218,203,.85); }}
-.row:last-child {{ border-bottom: 0; }}
-.no {{ font-family: Georgia, serif; font-size: 20px; color: #6B6156; }}
-.cat {{ display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid #E4DACB;
-  border-radius: 999px; font-size: 14px; color: #6E6459; white-space: nowrap; }}
-.cat i {{ width: 7px; height: 7px; border-radius: 50%; background: var(--c); }}
-.text {{ font-size: 24px; line-height: 1.35; color: #2B2620; }}
-.side {{ position: relative; display: flex; flex-direction: column; align-items: flex-start;
-  justify-content: flex-end; padding-bottom: 10px; }}
-.issue {{ font-family: Georgia, serif; font-size: 210px; line-height: .85; letter-spacing: -.06em;
-  color: rgba(43,38,32,.10); position: absolute; top: -8px; right: 0; }}
-.counts {{ display: flex; align-items: baseline; gap: 10px; font-size: 18px; color: #6E6459; }}
-.counts strong {{ font-family: Georgia, serif; font-size: 48px; color: #C8552C; font-weight: 700; }}
-.chips {{ display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }}
-.chip {{ display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: 1px solid #E4DACB;
-  border-radius: 999px; background: rgba(255,253,248,.7); font-size: 16px; color: #5F564B; }}
-.chip i {{ width: 8px; height: 8px; border-radius: 50%; }}
-.more {{ margin-top: 14px; font-size: 15px; color: #6E6459; letter-spacing: .04em; }}
-.source-note {{ margin-top: 24px; font-size: 15px; line-height: 1.7; color: #6E6459; }}
-.quote {{ margin-top: 26px; padding-left: 18px; border-left: 4px solid #C8552C;
-  font-family: "HF Serif", serif; font-size: 34px; line-height: 1.4; color: #5F564B; }}
-.side-quote {{ margin: 0 0 28px; padding-left: 0; border-left: 0; font-size: 26px; color: #6E6459; }}
-.foot {{ position: absolute; left: 64px; right: 64px; bottom: 28px; display: flex;
-  justify-content: space-between; font-size: 15px; letter-spacing: .08em; color: #6E6459; z-index: 2; }}
-.portrait .layout {{ display: flex; flex-direction: column; gap: 14px; top: 116px; bottom: 60px; }}
-.portrait .title {{ font-size: 76px; max-width: 1280px; line-height: 1.1; }}
-.portrait .sub {{ font-size: 24px; margin-top: 14px; }}
-.portrait .rule {{ margin: 18px 0 12px; }}
-.portrait .row {{ padding: 8px 0; grid-template-columns: 34px 92px 1fr; }}
-.portrait .text {{ font-size: 20px; }}
-.portrait .side {{ display: flex; flex-direction: row; align-items: center; gap: 24px; margin-top: auto;
-  width: 100%; padding: 16px 0 4px; border-top: 1px solid rgba(228,218,203,.85); }}
-.portrait .side-quote, .portrait .issue {{ display: none; }}
-.portrait .quote {{ margin-top: 24px; font-size: 34px; max-width: 1100px; }}
-.portrait .issue {{ font-size: 150px; top: -34px; right: 0; opacity: .07; }}
-.portrait .counts strong {{ font-size: 36px; }}
-.portrait .chips {{ margin-top: 0; }}
-.portrait .source-note, .portrait .more {{ display: none; }}
+.brand i {{ width: 12px; height: 12px; border-radius: 50%; background: #E85D2A; display: inline-block; }}
+.date {{ font-size: 17px; letter-spacing: .08em; color: #A99B8C; }}
+.layout {{ position: absolute; left: 64px; right: 64px; top: 142px; bottom: 80px; display: grid;
+  grid-template-columns: 1.62fr .82fr; gap: 56px; z-index: 2; }}
+.copy {{ min-width: 0; display: flex; flex-direction: column; justify-content: center; }}
+.hook {{ font-family: "HF Serif", serif; font-weight: 900; font-size: {hook_size}px;
+  line-height: .94; letter-spacing: -.045em; max-width: 1160px; }}
+.hook .line {{ display: block; white-space: nowrap; }}
+.hook .accent {{ display: inline-block; margin-top: 6px; padding: 0 14px 4px;
+  background: #E85D2A; color: #141210; }}
+.subhook {{ margin: 34px 0 0; font-size: 38px; line-height: 1.35; letter-spacing: -.01em; color: #F7F1E4; max-width: 1120px; }}
+.meta {{ margin: 18px 0 0; font-size: 20px; letter-spacing: .06em; color: #A99B8C; }}
+.logos {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 12px;
+  align-content: center; justify-items: center; }}
+.logo {{ text-align: center; min-width: 0; }}
+.logo-img {{ width: 88px; height: 88px; display: grid; place-items: center; margin: 0 auto 10px; }}
+.logo-img img {{ width: 78px; height: 78px; object-fit: contain; filter: brightness(0) invert(1); }}
+.logo-img .logo-word {{ font-size: 22px; font-weight: 800; color: #F7F1E4; white-space: nowrap; }}
+.logo span {{ display: block; font-size: 15px; color: #C8B9A7; letter-spacing: .03em; white-space: nowrap; }}
+.issue {{ position: absolute; right: 30px; bottom: 40px; z-index: 1;
+  font-family: Georgia, serif; font-size: 210px; line-height: .8; letter-spacing: -.06em;
+  color: rgba(247,241,228,.05); }}
+.foot {{ position: absolute; left: 64px; right: 64px; bottom: 26px; display: flex;
+  justify-content: space-between; font-size: 15px; letter-spacing: .08em; color: #A99B8C; z-index: 2; }}
+.portrait .layout {{ display: grid; grid-template-columns: 1.22fr .78fr; gap: 30px; top: 110px; bottom: 70px; }}
+.portrait .copy {{ justify-content: center; }}
+.portrait .hook {{ font-size: {hook_size}px; max-width: 820px; }}
+.portrait .subhook {{ font-size: 28px; margin-top: 24px; max-width: 780px; }}
+.portrait .meta {{ font-size: 17px; margin-top: 12px; }}
+.portrait .logos {{ grid-template-columns: repeat(2, 1fr); gap: 18px 8px; align-content: center;
+  justify-items: center; border-top: 0; padding-top: 0; margin-top: 0; }}
+.portrait .logo-img {{ width: 72px; height: 72px; margin-bottom: 6px; }}
+.portrait .logo-img img {{ width: 66px; height: 66px; }}
+.portrait .logo span {{ font-size: 13px; }}
+.portrait .issue {{ font-size: 150px; right: 24px; bottom: 40px; }}
 </style>
 </head>
 <body>
 <div class="cover {'portrait' if variant == '4x3' else 'landscape'}">
-  <header class="masthead">
+  <header class="topbar">
     <div class="brand"><i></i>AI 早报</div>
-    <div class="date-line">{esc(date)} · {esc(issue)}</div>
+    <div class="date">{esc(date)} · {esc(issue)}</div>
   </header>
   <main class="layout">
     <section class="copy">
-      <div class="kicker">{esc(kicker)}</div>
-      <h1 class="title">{esc(title)}</h1>
-      <p class="sub">{esc(subtitle)}</p>
-      <div class="rule"></div>
-      <div class="headlines">{''.join(rows)}</div>
-      <div class="quote">“{esc(caption)}”</div>
+      <div class="hook">{''.join(hook_html)}</div>
+      <p class="subhook">{esc(subhook)}</p>
+      <p class="meta">{esc(meta_line)}</p>
     </section>
-    <aside class="side">
-      <div class="issue">{esc(issue)}</div>
-      <div class="quote side-quote">“{esc(caption)}”</div>
-      <div class="counts"><strong>{len(stories)}</strong><span>条要闻</span><strong>{len(stories)}</strong><span>个来源</span></div>
-      <div class="chips">{''.join(vendors)}</div>
-      {more_line}
-      <div class="source-note">每条附原文截图<br>可信参考</div>
-    </aside>
+    <aside class="logos">{logos}</aside>
   </main>
+  <div class="issue">{esc(issue)}</div>
   <footer class="foot"><span>AI 早报 · {esc(issue)}</span><span>{esc(date)} · 公开信息整理</span></footer>
 </div>
 </body>
@@ -232,7 +232,7 @@ def generate_covers(project: Path, chromium: str | None = None) -> list[Path]:
         json.dumps(
             {
                 "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                "title": content["screens"][0].get("title", ""),
+                "headline": content["screens"][0].get("headline") or content["screens"][0].get("title", ""),
                 "covers": [str(p.relative_to(project)).replace("\\", "/") for p in outputs],
             },
             ensure_ascii=False,
@@ -245,7 +245,7 @@ def generate_covers(project: Path, chromium: str | None = None) -> list[Path]:
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="生成 16:9 与 4:3 横屏封面")
+    parser = argparse.ArgumentParser(description="生成 16:9 与 4:3 B 站风格封面")
     parser.add_argument("--project", default=".", help="工程目录")
     args = parser.parse_args()
     for path in generate_covers(Path(args.project)):

@@ -47,12 +47,16 @@
 | `id` | 必须是 `cover` |
 | `kicker` | 左上角小字 |
 | `title` / `subtitle` | 视频封面屏主标题、副标题 |
-| `headline` | 封面图专用钩子标题；不填时回退 `title`。必须基于事实，不能编造数字 |
+| `headline` | 长钩子/备选文案；没有 `hook_lines` 时作为封面大标题。必须基于事实，不能编造数字 |
+| `hook_lines` | 封面图主视觉：1–3 行超大钩子，每行 2–6 字，如 `["AI 资本","战开打"]` |
+| `hook_accent` | 强调行下标（0 开始），默认最后一行用橙色块 |
+| `subhook` | 封面副钩子：一行事实，如 `Anthropic 冲 IPO · Meta 融资 950 亿` |
+| `logos` | 封面 logo 墙，如 `["anthropic","meta","openai","kimi","minimax","kuaishou"]`；可用 `openai/anthropic/meta/kimi/minimax/kuaishou/vllm/deepseek` |
 | `caption` | 底部字幕条 |
 | `narration` | 开场旁白，通常 30–50 字 |
 | `issueStamp` | 背景大号日期，如 `10.26` |
 | `meta` | 封面信息行，如 `["2026-10-26", "公开信息整理", "8 条要闻"]` |
-| `index` | 今日索引，每条 `{ "cat": "<类型>", "text": "<短标题>" }`，条数等于 story 数 |
+| `index` | 视频封面屏的今日索引；封面图不再显示索引 |
 
 ### story
 

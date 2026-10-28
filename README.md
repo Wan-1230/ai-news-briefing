@@ -33,8 +33,8 @@
 
 - `out/covers/cover_16x9.png|jpg`：1920×1080，适合 B 站等横版平台
 - `out/covers/cover_4x3.png|jpg`：1440×1080，适合公众号/其他位置
-- 大标题优先读 `cover.headline`，用“冲突/结果/数字”做钩子，不直接复用视频主标题；没填时回退 `cover.title`
-- 16:9 显示前 4 条索引 + “还有 N 条”，4:3 列出全部 8 条
+- 版式参照 B 站缩略图：深色底、超大 `cover.hook_lines`（1–3 行、每行 2–6 字）、右侧/底部厂商 logo 墙、一行 `cover.subhook` 事实
+- 封面不放 8 条索引小字；缩略图尺寸下先读大字
 - JPG 单张 < 5MB，满足 B 站封面要求
 
 ## 安装
@@ -101,6 +101,7 @@ python scripts/publish_bilibili.py --project . --cookie <cookies.json> \
 ## 第三方与版权
 
 - 仓库内置 `gsap.min.js`，版权归 GreenSock/Webflow，遵循其 Standard License。
+- `assets/logos/` 的厂商标识来自 Simple Icons（CC0）；商标归各厂商所有，仅用于资讯封面标注。
 - Noto 字体、Qwen3-TTS 模型、HyperFrames 均不随仓库分发，需自行安装（各遵循其原始许可）。
 - 生成视频里的新闻截图版权归原站点所有；公开发布前请自行确认使用授权，并保留来源标注。
 
